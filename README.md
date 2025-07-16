@@ -1,8 +1,8 @@
-# HiCAST
+# FAST
 
-**HiCAST: Highly Customized Arbitrary Style Transfer with Adapter Enhanced Diffusion Models** <br>
+**FAST: Flexibly Controllable Arbitrary Style Transfer via Latent Diffusion models** <br>
 
-*Hanzhang Wang, Haoran Wang, Jinze Yang, Zhongrui Yu, Zeke Xie, Lei Tian, Xinyan Xiao, Junjun Jiang, Xianming Liu, Mingming Sun* <br>
+*Hanzhang Wang*, Haoran Wang*, Zhongrui Yu,  Mingming Sun,  Junjun Jiang,  Xianming Liu,  Deming Zhai* <br>
 [[Paper](https://arxiv.org/pdf/2401.05870.pdf)]
 
 ## Reference
@@ -10,11 +10,11 @@
 Citation:
 
 ```latex
-@article{wang2024hicast,
-  title={HiCAST: Highly Customized Arbitrary Style Transfer with Adapter Enhanced Diffusion Models},
-  author={Wang, Hanzhang and Wang, Haoran and Yang, Jinze and Yu, Zhongrui and Xie, Zeke and Tian, Lei and Xiao, Xinyan and Jiang, Junjun and Liu, Xianming and Sun, Mingming},
-  journal={arXiv preprint arXiv:2401.05870},
-  year={2024}
+@article{wang2025fast,
+  title={FAST: Flexibly Controllable Arbitrary Style Transfer via Latent Diffusion models},
+  author={Wang, Hanzhang and Wang, Haoran and Yu, Zhongrui and Sun, Mingming and Jiang, Junjun and Liu, Xianming and Zhai, Deming},
+  journal={ACM Transactions on Multimedia Computing, Communications and Applications},
+  publisher={ACM New York, NY}
 }
 ```
 
