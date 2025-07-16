@@ -2,7 +2,7 @@
 
 **FAST: Flexibly Controllable Arbitrary Style Transfer via Latent Diffusion models** <br>
 *Hanzhang Wang*, Haoran Wang*, Zhongrui Yu,  Mingming Sun,  Junjun Jiang,  Xianming Liu,  Deming Zhai* <br>
-ACM Transactions on Multimedia Computing, Communications, and Applications (ToMM), 2024. <br>
+ACM Transactions on Multimedia Computing, Communications, and Applications (ToMM), 2025. <br>
 [[Arxiv](https://arxiv.org/pdf/2401.05870.pdf)]
 
 ## Reference
