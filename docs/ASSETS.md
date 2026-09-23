@@ -1,5 +1,7 @@
 # Asset Setup Guide
 
+**English** | [简体中文](ASSETS_zh.md)
+
 Run all commands from `FAST/`. Relative paths are resolved from that directory. The repository includes source code, configurations, and the two test datasets. Download model weights, training datasets, and the runtime environment separately.
 
 ## Download Sources
