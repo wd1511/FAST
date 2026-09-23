@@ -1,0 +1,80 @@
+pretrained_sd_model_path: pretrained_models/stable-diffusion-v1-5/
+control_mode: ["hed","depth",'seg']
+adapter_conditioning_scale: [0.0, 0.0, 0.0]
+output_dir: model_output/train
+train_data:
+  width: 256
+  height: 256
+  n_sample_frames: 15
+  sample_start_idx: 1
+  frame_step: 1
+  use_bucketing: True
+  data_mode: "train"
+  path: ./data/videos_part/
+  json_path: ./data/video/train_type_data_VideoJsonFormat_part_00000_local_path.list
+  image_dir: ./data/image/laion-aes-v2_over_5_en_zh_origin_score_withMulImg_512_local_path.list
+  style_dir: ./dataset/wiki_image
+
+validation_data:
+  width: 256
+  height: 256
+  sample_start_idx: 1
+  frame_step: 1
+  use_bucketing: True
+  data_mode: "val"
+  path: ./data/videos_part/
+  sample_preview: True
+  prompt: ""
+  n_sample_frames: 15
+  num_inference_steps: 20
+  guidance_scale: 10.0
+  video_scale: 1.5
+  json_path: ./data/video/train_type_data_VideoJsonFormat_part_00000_local_path.list
+  image_dir: ./data/image/laion-aes-v2_over_5_en_zh_origin_score_withMulImg_512_local_path.list
+
+dataset_types: ['json']
+validation_steps: 1000
+
+train_batch_size: 1
+max_train_steps: 10000
+train_num_worker: 4
+
+learning_rate: 1.0e-5
+scale_lr: False
+lr_scheduler: constant # linear, cosine, cosine_with_restarts, polynomial, constant, constant_with_warmup
+lr_warmup_steps: 0
+adam_beta1: 0.9
+adam_beta2: 0.999
+adam_weight_decay: 1.0e-2
+adam_epsilon: 1.0e-08
+max_grad_norm: 1.0
+gradient_accumulation_steps: 1
+gradient_checkpointing: True
+text_encoder_gradient_checkpointing: True
+controlnet_gradient_checkpointing: True
+checkpointing_steps: 5000
+
+mixed_precision: fp16
+use_8bit_adam: False
+enable_xformers_memory_efficient_attention: True
+enable_torch_2_attn: False
+seed: 2023
+train_text_encoder: False
+use_offset_noise: False
+offset_noise_strength: 0.1
+extend_dataset: False
+cache_latents: False
+cached_latent_dir: None
+
+prob_uncond: 0.2
+init_noise_by_residual_thres: 0.1
+controlnet_conditioning_scale: 1.0
+
+if_load_checkpoint: False
+checkpoint_dir: None
+adapter_checkpoint_dir: ['./checkpoint/image_model/hed_adapter','./checkpoint/image_model/depth_adapter','./checkpoint/image_model/seg_adapter']
+use_adapter: True
+checkpoint_2d_dir: ./checkpoint/image_model/
+
+weight_content: 2
+weight_cfc: 1

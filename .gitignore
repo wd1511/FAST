@@ -1,0 +1,32 @@
+# Downloaded model weights and training datasets (see docs/ASSETS.md).
+/pretrained_models/
+/checkpoint/
+/dataset/
+/data/
+/model/annotator/
+
+# Generated outputs and local environments.
+/outputs/
+/results/
+/model_output/
+/.cache/
+/.venv/
+/diffusers_env/
+/logs/
+/wandb/
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+.DS_Store
+._*
+
+# Never include binary weights or resource archives in the source repository.
+*.bin
+*.pt
+*.pth
+*.ckpt
+*.safetensors
+*.zip
+*.tar
+*.tar.gz
+*.tgz

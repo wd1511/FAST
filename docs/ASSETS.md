@@ -1,23 +1,23 @@
-# 资源准备指南
+# Asset Setup Guide
 
-所有命令和相对路径均以 `FAST/` 为基准。模型、数据与环境分别下载，源码仓库不包含这些大体积资源。
+Run all commands from `FAST/`. Relative paths are resolved from that directory. The repository includes source code, configurations, and the two test datasets. Download model weights, training datasets, and the runtime environment separately.
 
-## 下载入口
+## Download Sources
 
-| 入口 | 内容 |
+| Source | Contents |
 | --- | --- |
-| [Hugging Face：wd1511/fast-ldm](https://huggingface.co/wd1511/fast-ldm) | `checkpoint/`、`pretrained_models/`、`model/annotator/`，约 19.82 GiB |
-| [百度网盘：model](https://pan.baidu.com/s/1q6lgOszfOS-p0OmOzhhYWg) | 模型、测试与训练数据、运行环境；提取码：`hcsc` |
+| [Hugging Face: wd1511/fast-ldm](https://huggingface.co/wd1511/fast-ldm) | `checkpoint/`, `pretrained_models/`, and `model/annotator/`, approximately 19.82 GiB |
+| [Baidu Netdisk: model](https://pan.baidu.com/s/1q6lgOszfOS-p0OmOzhhYWg) | Models, test and training datasets, and the runtime environment; access code: `hcsc` |
 
-Hugging Face 提供可直接使用的模型目录。百度网盘提供模型、数据和环境压缩包，可按需选择下载。
+Hugging Face provides model directories ready for local use. Baidu Netdisk provides archives that can be downloaded individually as needed.
 
-## 目录结构
+## Directory Layout
 
 ```text
 FAST/
 ├── checkpoint/
-│   ├── image_model/          # 图像 UNet、hed/depth/seg adapter
-│   └── video_model/          # 视频 UNet、hed/depth/seg adapter
+│   ├── image_model/          # Image UNet and HED/depth/segmentation adapters
+│   └── video_model/          # Video UNet and HED/depth/segmentation adapters
 ├── pretrained_models/
 │   ├── stable-diffusion-v1-5/
 │   │   ├── model_index.json
@@ -31,29 +31,29 @@ FAST/
 │   ├── dpt-hybrid-midas/
 │   ├── hed-network.pth
 │   └── 150_16_swin_l_oneformer_coco_100ep.pth
-├── model/annotator/          # annotator 实现、配置和 ckpts
-├── test_data/
+├── model/annotator/          # Annotator implementations, configurations, and weights
+├── test_data/                # Included in this repository
 │   ├── test_image_data/
-│   │   ├── content/          # 36 张内容图
-│   │   └── style/            # 36 张风格图
+│   │   ├── content/          # 36 content images
+│   │   └── style/            # 36 style images
 │   └── test_video_data1/
-│       ├── content/          # 12 个视频
-│       └── style/            # 12 张风格图
-├── dataset/                 # 图像训练数据
+│       ├── content/          # 12 videos
+│       └── style/            # 12 style images
+├── dataset/                 # Image training data
 │   ├── coco_image/
 │   └── wiki_image/
-├── data/                    # 视频训练示例和清单
+├── data/                    # Video training examples and manifests
 │   ├── videos_part/
 │   ├── video/
 │   └── image/
-└── diffusers_env/            # 使用环境压缩包时的解压目录
+└── diffusers_env/            # Optional extracted runtime environment
 ```
 
-`checkpoint/{image_model,video_model}/` 下的 `unet/` 及所选控制类型对应的 `hed_adapter/`、`depth_adapter/`、`seg_adapter/`，均需包含 `config.json` 和 `diffusion_pytorch_model.bin`。图像与视频 checkpoint 应与各自的推理入口配套使用。
+Each `unet/`, `hed_adapter/`, `depth_adapter/`, and `seg_adapter/` directory under `checkpoint/{image_model,video_model}/` requires `config.json` and `diffusion_pytorch_model.bin`. Download the adapters needed by the selected controls. Use the image and video checkpoints with their corresponding inference entry points.
 
-## Hugging Face 模型下载
+## Download Models from Hugging Face
 
-安装 Hugging Face CLI 后执行：
+With the Hugging Face CLI installed, run:
 
 ```bash
 hf download wd1511/fast-ldm --include 'checkpoint/**' --local-dir .
@@ -61,35 +61,37 @@ hf download wd1511/fast-ldm --include 'pretrained_models/**' --local-dir .
 hf download wd1511/fast-ldm --include 'model/annotator/**' --local-dir .
 ```
 
-这三个目录包含 659 个资源文件，下载后即可得到上面的模型布局。按目录筛选可避免覆盖源码目录的 `README.md`。测试数据和训练数据从百度网盘单独获取。
+These directories contain 659 asset files and match the layout above. Filtering by directory avoids replacing the source repository's `README.md`. Test inputs are included in GitHub; training data is available from Baidu Netdisk.
 
-## 百度网盘资源包
+## Baidu Netdisk Archives
 
-打开 [model 分享链接](https://pan.baidu.com/s/1q6lgOszfOS-p0OmOzhhYWg)，输入提取码 `hcsc`。以下示例将下载的压缩包存放在与 `FAST/` 同级的 `HICAST/` 中。
+Open the [model share](https://pan.baidu.com/s/1q6lgOszfOS-p0OmOzhhYWg) and enter access code `hcsc`. The examples below assume downloaded archives are stored in `HICAST/`, alongside `FAST/`.
 
-| 压缩包 | 解压位置 | 用途 |
+| Archive | Destination | Purpose |
 | --- | --- | --- |
-| `checkpoint.tar.gz` | `FAST/checkpoint/` | 图像与视频 checkpoint |
-| `pretrained_models.tar.gz` | `FAST/pretrained_models/` | DPT、HED、OneFormer 等辅助模型 |
-| `models--runwayml--stable-diffusion-v1-5.zip` | `FAST/pretrained_models/stable-diffusion-v1-5/` | Stable Diffusion 权重与配置，转换方法见下文 |
-| `annotator.tar.gz` | `FAST/model/annotator/` | annotator 实现、配置与权重 |
-| `test_data.tar.gz` | `FAST/test_data/` | 图像与视频测试输入 |
-| `dataset.tar.gz` | `FAST/dataset/` | COCO 内容图像与 WikiArt 风格图像 |
-| `data.tar.gz` | `FAST/data/` | 视频训练示例与清单 |
-| `diffusers_env.tar.gz` | `FAST/diffusers_env/` | Linux/CUDA 运行环境 |
+| `checkpoint.tar.gz` | `FAST/checkpoint/` | Image and video checkpoints |
+| `pretrained_models.tar.gz` | `FAST/pretrained_models/` | DPT, HED, OneFormer, and other auxiliary models |
+| `models--runwayml--stable-diffusion-v1-5.zip` | `FAST/pretrained_models/stable-diffusion-v1-5/` | Stable Diffusion weights and configurations; see the conversion below |
+| `annotator.tar.gz` | `FAST/model/annotator/` | Annotator implementations, configurations, and weights |
+| `test_data.tar.gz` | `FAST/test_data/` | Image and video test inputs |
+| `dataset.tar.gz` | `FAST/dataset/` | COCO content images and WikiArt style images |
+| `data.tar.gz` | `FAST/data/` | Video training examples and manifests |
+| `diffusers_env.tar.gz` | `FAST/diffusers_env/` | Linux/CUDA runtime environment |
 
-### 测试数据
+### Test Data
+
+The repository includes both test datasets. To restore them from the archive:
 
 ```bash
 tar -xzf ../HICAST/test_data.tar.gz \
   test_data/test_image_data test_data/test_video_data1
 ```
 
-两个测试目录共 96 个文件，约 43.33 MiB。图像支持 JPG/JPEG、PNG、WebP、BMP；视频支持 MP4、MOV、AVI、MKV、WebM。自己的内容和风格文件可以放入对应的 `content/`、`style/`，或通过推理参数指定其他目录。
+The two directories contain 96 files, approximately 43.33 MiB. Supported image formats are JPG/JPEG, PNG, WebP, and BMP. Supported video formats are MP4, MOV, AVI, MKV, and WebM. Place custom content and style files in the corresponding `content/` and `style/` directories, or supply custom paths to the inference scripts.
 
-### 模型包
+### Model Archives
 
-通过 Hugging Face 下载过模型后，无需重复解压这些模型包。
+Skip these extraction steps if the models have already been downloaded from Hugging Face.
 
 ```bash
 mkdir -p model pretrained_models
@@ -101,7 +103,7 @@ tar -xzf ../HICAST/pretrained_models.tar.gz \
   pretrained_models/150_16_swin_l_oneformer_coco_100ep.pth
 ```
 
-`pretrained_models.tar.gz` 中的 Stable Diffusion 目录使用了指向原缓存位置的绝对软链接。使用百度网盘模型包时，通过下面的命令从 ZIP 的 `blobs/` 读取真实内容，生成项目内的普通文件：
+The Stable Diffusion directory in `pretrained_models.tar.gz` contains absolute symlinks to the original cache location. For the Baidu Netdisk archives, the following command reads the actual contents from the ZIP's `blobs/` directory and writes regular files inside the project:
 
 ```bash
 python - <<'PY'
@@ -134,11 +136,11 @@ with zipfile.ZipFile("../HICAST/models--runwayml--stable-diffusion-v1-5.zip") as
 PY
 ```
 
-该布局采用 Diffusers FP32 `.bin` 文件，共 15 个文件、约 5.11 GiB。图像与视频 checkpoint 自带 VGG 参数，推理入口直接加载其中的权重。
+This layout uses Diffusers FP32 `.bin` weights: 15 files, approximately 5.11 GiB. FAST image and video checkpoints include the VGG parameters loaded by the inference entry points.
 
-### 环境包
+### Packaged Environment
 
-`diffusers_env.tar.gz` 适用于匹配的 Linux/CUDA 平台：
+Use `diffusers_env.tar.gz` on a compatible Linux/CUDA platform:
 
 ```bash
 mkdir -p diffusers_env
@@ -147,21 +149,21 @@ source diffusers_env/bin/activate
 conda-unpack
 ```
 
-也可按项目 `environment.yml` 创建 Conda 环境，主要版本要求见 [README](../README.md#环境)。
+Alternatively, create a Conda environment from `environment.yml`. See the [requirements](../README.md#requirements) for the main dependency versions.
 
-## 训练数据与依赖
+## Training Data and Dependencies
 
 ```bash
 tar -xzf ../HICAST/dataset.tar.gz
 tar -xzf ../HICAST/data.tar.gz
 ```
 
-图像训练使用 `dataset/coco_image/` 和 `dataset/wiki_image/`，配置位于 `configs/`。图像验证使用 `test_data/test_image_data/`。
+Image training uses `dataset/coco_image/` and `dataset/wiki_image/`. Training configurations are in `configs/`, and image validation uses `test_data/test_image_data/`.
 
-`data/` 提供 43 个视频示例及原始清单，不是完整 HD-VILA/LAION 数据集。视频训练需要根据实际视频和图像位置生成本地清单，并设置 `configs/config_video.yaml` 中的数据路径。
+The `data/` archive provides 43 example videos and the original manifests, rather than the complete HD-VILA/LAION datasets. Video training requires local manifests that match the actual video and image locations, together with the corresponding paths in `configs/config_video.yaml`.
 
-视频训练还依赖 `model/loss/temporal_loss/CCPL.py` 和 `CFC_loss.py`。资源包中仅有这两个模块的旧 Python 3.8 字节码，运行完整视频训练需要另行提供源码。图像与视频推理不依赖这两个训练损失模块。
+Video training also requires `model/loss/temporal_loss/CCPL.py` and `CFC_loss.py`. Only legacy Python 3.8 bytecode for these modules is provided in the source package; the source implementations must be supplied separately for full video training. Image and video inference do not depend on these training loss modules.
 
-## 资源存储
+## Asset Storage
 
-模型、数据、环境、缓存和推理结果由 `.gitignore` 排除，不纳入源码仓库。`model/annotator/` 从 Hugging Face 或百度网盘获取。推理只需模型、annotator 和测试输入，无需下载训练数据集。
+The source code, configurations, and image/video test inputs are stored in GitHub. Model weights, training datasets, packaged environments, caches, and generated outputs are excluded by `.gitignore`. Download `model/annotator/` from Hugging Face or Baidu Netdisk. Inference requires models, annotators, and test inputs, but not the training datasets.

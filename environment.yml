@@ -102,8 +102,8 @@ dependencies:
     - timm==0.9.12
     - tokenizers==0.13.3
     - torch==2.0.0
-    - torchaudio==0.13.1+cu117
-    - torchvision==0.14.1+cu117
+    - torchaudio==2.0.1
+    - torchvision==0.15.1
     - tqdm==4.65.0
     - transformers==4.27.3
     - triton==2.0.0
@@ -115,4 +115,3 @@ dependencies:
     - xformers==0.0.17
     - yacs==0.1.8
     - zipp==3.16.2
-prefix: /root/miniconda3/envs/diffusers-torch2

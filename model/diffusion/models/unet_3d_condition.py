@@ -157,6 +157,7 @@ class UNetPseudo3DConditionModel(ModelMixin, ConfigMixin):
         content_channels: int = 4,
         content_refined_channels = 3,
         style_channels = 2944,
+        vgg_pretrained: bool = True,
     ):
         super().__init__()
 
@@ -167,7 +168,7 @@ class UNetPseudo3DConditionModel(ModelMixin, ConfigMixin):
         self.sample_size = sample_size
         time_embed_dim = block_out_channels[0] * 4
         
-        self.vgg = vgg16(pretrained=True, requires_grad=False)
+        self.vgg = vgg16(pretrained=vgg_pretrained, requires_grad=False)
         self.vgg_scaling_layer = ScalingLayer()
         self.null_style_vector = torch.nn.Embedding(1, style_channels)
 

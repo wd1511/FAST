@@ -41,9 +41,8 @@ from einops import rearrange, repeat
 from torch.nn import functional as F
 
 import sys
-sys.path.append("/root/paddlejob/workspace/project/hicast/model")
-from model.annotator.uniformer import UniformerDetector
-from model.annotator.oneformer import OneformerCOCODetector, OneformerADE20kDetector
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parents[3] / "model"))
 
 logger = logging.get_logger(__name__)  # pylint: disable=invalid-name
 
@@ -622,6 +621,7 @@ class StableDiffusionAdapterPipeline(DiffusionPipeline):
         dtype = images.dtype
         input_images = rearrange(images, 'b c h w -> b h w c').cpu().numpy()
         input_images = (input_images + 1) * 255 / 2
+        from model.annotator.oneformer import OneformerCOCODetector
         seg_model = OneformerCOCODetector()
         control_maps = np.stack([seg_model(np.uint8(input_images[inp])) for inp in range(input_images.shape[0])])
         control_maps = rearrange(control_maps, 'b h w c->b c h w')

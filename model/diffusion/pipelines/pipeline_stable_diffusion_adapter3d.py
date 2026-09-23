@@ -570,16 +570,17 @@ class StableDiffusionAdapter3DPipeline(DiffusionPipeline):
     @torch.no_grad()
     def get_seg_map(self, input_frames):
         b, f, c, h, w = input_frames.shape
-        dtype = images.dtype
+        dtype = input_frames.dtype
         device = input_frames.device
     
         frames = rearrange(input_frames, 'b f c h w -> (b f) h w c').cpu().numpy()
         frames = (frames + 1) * 255 / 2
 
+        from model.annotator.oneformer import OneformerCOCODetector
         seg_model = OneformerCOCODetector()
 
         control_maps = np.stack([seg_model(np.uint8(frames[inp])) for inp in range(frames.shape[0])])
-        control_maps = rearrange(control_maps, 'b h w c ->b f c h w', f=f)
+        control_maps = rearrange(control_maps, '(b f) h w c -> b f c h w', f=f)
 
         control_maps = torch.from_numpy(control_maps).div(255).to(dtype).to(device)
 
@@ -802,7 +803,7 @@ class StableDiffusionAdapter3DPipeline(DiffusionPipeline):
             frame_residual = torch.abs(one_frame[:,1:,:,:,:] - one_frame[:,:-1,:,:,:])
             one_frame = rearrange(one_frame, "b f c h w -> (b f) c h w")
 
-            frame_residual = frame_residual / torch.max(frame_residual)
+            frame_residual = frame_residual / torch.max(frame_residual).clamp_min(torch.finfo(frame_residual.dtype).eps)
             frame_residual = rearrange(frame_residual, "b f c h w -> (b f) c h w")
 
             frame_residual = torch.nn.functional.interpolate(

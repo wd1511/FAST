@@ -52,7 +52,8 @@ from utils.dataset import VideoJsonDataset, SingleVideoDataset, \
     ImageDataset, VideoFolderDataset, CachedDataset, CombineDataset
 
 import sys
-sys.path.append("/root/paddlejob/workspace/project/add_temporal_loss_scripts/model")
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "model"))
 from model.annotator.uniformer import UniformerDetector
 from model.annotator.oneformer import OneformerCOCODetector, OneformerADE20kDetector
 

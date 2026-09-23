@@ -1,0 +1,79 @@
+pretrained_sd_model_path: pretrained_models/stable-diffusion-v1-5/
+output_dir: model_output/train
+control_mode: ["canny", "style"]
+adapter_conditioning_scale: [1.0, 1.0]
+train_data:
+  width: 256
+  height: 256
+  content_dir: ./dataset/coco_image
+  style_dir: ./dataset/wiki_image
+  content_test_dir: ./test_data/test_image_data/content
+  style_test_dir: ./test_data/test_image_data/style
+
+learning_rate: 1.0e-5
+scale_lr: False
+lr_scheduler: constant # linear, cosine, cosine_with_restarts, polynomial, constant, constant_with_warmup
+lr_warmup_steps: 0
+adam_beta1: 0.9
+adam_beta2: 0.999
+adam_weight_decay: 1.0e-2
+adam_epsilon: 1.0e-08
+max_grad_norm: 1.0
+gradient_accumulation_steps: 1
+gradient_checkpointing: True
+text_encoder_gradient_checkpointing: True
+checkpointing_steps: 10000
+
+mixed_precision: fp16
+use_8bit_adam: False
+enable_xformers_memory_efficient_attention: True
+enable_torch_2_attn: False
+seed: 2023
+train_text_encoder: False
+use_offset_noise: False
+offset_noise_strength: 0.1
+extend_dataset: False
+cache_latents: False
+cached_latent_dir: None
+
+if_load_checkpoint: True
+checkpoint_dir: ./checkpoint/image_model
+adapter_checkpoint_dir: False
+use_adapter: False
+freeze_unet_flag: False
+unet_pretrained: True
+
+data_random_rate: 0.5
+uncontent_flag: 0.8
+unstyle_flag: 0.1
+
+# noise/latent/image
+content_loss_type: latent
+content_loss_weight: 5.0
+
+# latent/image
+all_loss_type: image
+
+ccp_loss_flag: False
+ccp_loss_weight: 5.0
+
+style_loss_flag: True
+style_loss_weight: 5.0
+
+gram_loss_flag: False
+gram_loss_weight: 1.0
+
+cos_loss_flag: False
+cos_loss_weight: 1.0
+
+gan_loss_flag: True
+gan_loss_weight: 1
+patch_gan_loss_weight: 2
+update_dis_num: 10
+use_r1_flag: False
+color_flag: True
+
+validation_steps: 1000
+train_batch_size: 8
+max_train_steps: 5000
+train_num_worker: 4

@@ -81,7 +81,8 @@ from transformers import DPTForDepthEstimation
 from model.annotator.hed import HEDNetwork
 import cv2
 import sys
-sys.path.append("/root/paddlejob/workspace/project/hicast/model")
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "model"))
 from model.annotator.uniformer import UniformerDetector
 from model.annotator.oneformer import OneformerCOCODetector, OneformerADE20kDetector
 
